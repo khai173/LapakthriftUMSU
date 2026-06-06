@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Masuk – LapakThriftUMSU</title>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Clash+Display:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root{
+      --primary:#4f8cff;
+      --primary-dark:#1e3a8a;
+      --accent:#7dd3fc;
+      --text:#0f172a;
+      --text-muted:#64748b;
+      --bg:#f4f7fb;
+      --white:#fff;
+      --border:#dbe4f0;
+      --danger:#ef4444;
+      --radius:16px;
+      --shadow:0 18px 60px rgba(79,140,255,.12);
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Manrope',sans-serif;background:var(--bg);color:var(--text);line-height:1.5;}
+
+    .page-wrap{min-height:100vh;display:grid;grid-template-columns:1.15fr .85fr;gap:18px;padding:22px;max-width:1200px;margin:0 auto;align-items:stretch;}
+    @media (max-width:980px){.page-wrap{grid-template-columns:1fr;}}
+
+    .left-panel{
+      background:linear-gradient(160deg,#4f8cff 0%,#1e3a8a 100%);
+      border-radius:var(--radius);
+      color:#fff;
+      padding:24px;
+      position:relative;
+      overflow:hidden;
+      box-shadow:0 12px 40px rgba(79,140,255,.18);
+    }
+    .left-panel::before{content:'';position:absolute;top:-80px;right:-80px;width:260px;height:260px;background:rgba(255,255,255,.10);border-radius:50%;}
+
+    .logo{position:relative;display:flex;align-items:center;gap:10px;font-family:'Clash Display',sans-serif;font-weight:900;white-space:nowrap;text-decoration:none;color:#fff;}
+    .logo-icon{width:44px;height:44px;border-radius:14px;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;}
+    .logo-icon i{color:#fff;}
+    .logo span{color:var(--accent);}
+
+    .left-content{position:relative;margin-top:18px;}
+    .left-content h2{font-size:2.0rem;line-height:1.05;margin-bottom:10px;font-family:'Clash Display',sans-serif;}
+    .left-content p{opacity:.95;font-weight:800;max-width:520px;}
+
+    .feature-list{margin-top:18px;display:grid;gap:12px;}
+    .feature-item{display:flex;gap:12px;align-items:flex-start;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);border-radius:16px;padding:12px;}
+    .feat-icon{width:38px;height:38px;border-radius:14px;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .feat-icon i{color:#fff;}
+    .feature-item span{font-weight:800;}
+
+    .left-footer{position:relative;margin-top:18px;}
+    .trust-badges{display:flex;gap:10px;flex-wrap:wrap;}
+    .badge{
+      background:rgba(245,158,11,.18);
+      border:1px solid rgba(245,158,11,.32);
+      border-radius:999px;
+      padding:8px 12px;
+      font-weight:900;
+      font-size:.9rem;
+    }
+
+    .right-panel{
+      background:var(--white);
+      border-radius:var(--radius);
+      border:1.5px solid var(--border);
+      box-shadow:0 12px 40px rgba(26,107,60,.06);
+      padding:18px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .form-box{width:100%;max-width:420px;}
+    .form-header h1{font-family:'Clash Display',sans-serif;font-size:1.6rem;margin-bottom:6px;}
+    .form-header p{color:var(--text-muted);font-weight:800;margin-bottom:14px;}
+
+    /* Alert styles */
+    .alert{
+      display:none;
+      align-items:center;
+      gap:10px;
+      border-radius:14px;
+      padding:10px 12px;
+      font-weight:700;
+      margin-bottom:12px;
+      font-size:.9rem;
+    }
+    .alert.show{display:flex;}
+    .alert.error{background:rgba(239,68,68,.10);border:1.5px solid rgba(239,68,68,.30);color:#b91c1c;}
+    .alert.success{background:rgba(34,197,94,.10);border:1.5px solid rgba(34,197,94,.30);color:#15803d;}
+    .alert.warning{background:rgba(245,158,11,.10);border:1.5px solid rgba(245,158,11,.30);color:#b45309;}
+
+    .form-group{margin-bottom:12px;}
+    label{display:block;font-weight:900;margin-bottom:8px;color:var(--text);}
+    label span{color:var(--danger);}
+
+    .input-wrap{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      border:1.5px solid var(--border);
+      border-radius:12px;
+      background:var(--bg);
+      padding:12px 12px;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .input-wrap:focus-within{border-color:var(--primary);box-shadow:0 0 0 3px rgba(79,140,255,.12);}
+    .input-wrap i{color:var(--text-muted);font-size:.95rem;flex-shrink:0;}
+    input{width:100%;border:none;outline:none;background:transparent;font-family:inherit;font-weight:800;color:var(--text);}
+
+    .toggle-pw{border:none;background:transparent;cursor:pointer;color:var(--text-muted);width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;}
+    .toggle-pw:hover{background:#f1f5f9;}
+
+    .form-options{display:flex;justify-content:space-between;align-items:center;margin:6px 0 14px;gap:10px;}
+    .checkbox-label{display:flex;align-items:center;gap:8px;color:var(--text-muted);font-weight:700;cursor:pointer;font-size:.9rem;}
+    .forgot-link{color:var(--primary);font-weight:700;font-size:.9rem;}
+
+    .btn-primary{
+      width:100%;border:none;border-radius:999px;padding:13px 16px;cursor:pointer;
+      font-weight:800;font-family:inherit;background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+      color:#fff;transition:filter .2s,transform .15s;font-size:1rem;
+      display:flex;align-items:center;justify-content:center;gap:8px;
+    }
+    .btn-primary:hover{filter:brightness(.95);transform:translateY(-1px);}
+    .btn-primary:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+
+    .divider{margin:14px 0;display:flex;align-items:center;gap:12px;color:var(--text-muted);font-weight:700;font-size:.88rem;}
+    .divider::before,.divider::after{content:'';height:1px;background:var(--border);flex:1;}
+
+    .btn-social{
+      width:100%;border:1.5px solid var(--border);border-radius:999px;padding:12px 16px;cursor:pointer;
+      background:#fff;font-weight:800;font-family:inherit;display:flex;align-items:center;
+      justify-content:center;gap:10px;font-size:.9rem;transition:.2s;
+    }
+    .btn-social:hover{border-color:var(--primary);background:#f8faff;}
+    .btn-admin{
+      width:100%;margin-top:10px;border:1.5px solid var(--border);border-radius:999px;
+      padding:12px 16px;background:transparent;color:var(--text-muted);cursor:pointer;
+      font-weight:800;font-family:inherit;font-size:.9rem;display:flex;align-items:center;
+      justify-content:center;gap:8px;transition:.2s;
+    }
+    .btn-admin:hover{border-color:#94a3b8;color:var(--text);}
+
+    .register-link{margin-top:14px;color:var(--text-muted);font-weight:700;text-align:center;font-size:.9rem;}
+    .register-link a{color:var(--primary);text-decoration:none;font-weight:800;}
+    .register-link a:hover{text-decoration:underline;}
+
+    @media(max-width:600px){
+      .page-wrap{padding:12px;gap:12px;}
+      .left-panel{display:none;}
+      .right-panel{padding:24px 16px;border-radius:20px;}
+    }
+  </style>
+</head>
+<body>
+  <div class="page-wrap">
+    <div class="left-panel">
+      <a href="index.html" class="logo">
+        <div class="logo-icon"><i class="fa-solid fa-shop"></i></div>
+        Lapak<span>Thrift</span>UMSU
+      </a>
+      <div class="left-content">
+        <h2>Selamat Datang<br>Kembali, <span>Sobat!</span></h2>
+        <p>Masuk ke akun kamu dan lanjutkan berbelanja atau menjual barang preloved favorit.</p>
+        <div class="feature-list">
+          <div class="feature-item">
+            <div class="feat-icon"><i class="fa-solid fa-shield-halved"></i></div>
+            <span>Transaksi aman sesama mahasiswa UMSU</span>
+          </div>
+          <div class="feature-item">
+            <div class="feat-icon"><i class="fa-solid fa-tags"></i></div>
+            <span>Harga terjangkau &amp; bisa negosiasi</span>
+          </div>
+          <div class="feature-item">
+            <div class="feat-icon"><i class="fa-solid fa-comments"></i></div>
+            <span>Chat langsung dengan penjual</span>
+          </div>
+          <div class="feature-item">
+            <div class="feat-icon"><i class="fa-solid fa-map-location-dot"></i></div>
+            <span>COD di lingkungan kampus UMSU</span>
+          </div>
+        </div>
+      </div>
+      <div class="left-footer">
+        <div class="trust-badges">
+          <span class="badge">✓ Verifikasi Mahasiswa</span>
+          <span class="badge">✓ Gratis Daftar</span>
+          <span class="badge">✓ 100% Aman</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <div class="form-box">
+        <div class="form-header">
+          <h1>Masuk Akun</h1>
+          <p>Silakan masukkan email dan password kamu</p>
+        </div>
+
+        <!-- Alert box (error & success) -->
+        <div class="alert" id="alertBox">
+          <i class="fa-solid fa-circle-exclamation" id="alertIcon"></i>
+          <span id="alertMsg">Email atau password salah.</span>
+        </div>
+
+        <form action="login.php" method="POST" id="loginForm">
+          <div class="form-group">
+            <label>Email <span>*</span></label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-envelope"></i>
+              <input type="email" name="email" id="emailInput"
+                     placeholder="email@umsu.ac.id" required autocomplete="email" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Password <span>*</span></label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-lock"></i>
+              <input type="password" name="password" id="pwInput"
+                     placeholder="Masukkan password" required autocomplete="current-password" />
+              <button class="toggle-pw" type="button" onclick="togglePw()" aria-label="Tampilkan password">
+                <i class="fa-regular fa-eye" id="eyeIcon"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-options">
+            <label class="checkbox-label">
+              <input type="checkbox" name="remember" /> Ingat saya
+            </label>
+            <a href="#" class="forgot-link">Lupa password?</a>
+          </div>
+
+          <button type="submit" class="btn-primary" id="submitBtn">
+            <i class="fa-solid fa-right-to-bracket"></i>
+            Masuk Sekarang
+          </button>
+        </form>
+
+        <div class="divider">atau</div>
+
+        <button type="button" class="btn-social" onclick="alert('Fitur Google Login belum tersedia.')">
+          <img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/google.svg" width="18" style="opacity:0.7" alt="Google"/>
+          Masuk dengan Google
+        </button>
+
+        <button type="button" class="btn-admin" onclick="window.location.href='adminlogin.html'">
+          <i class="fa-solid fa-user-shield"></i>Login Admin
+        </button>
+
+        <div class="register-link">
+          Belum punya akun? <a href="register.html">Daftar Sekarang</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Toggle show/hide password
+    function togglePw() {
+      const pw   = document.getElementById('pwInput');
+      const icon = document.getElementById('eyeIcon');
+      if (pw.type === 'password') {
+        pw.type = 'text';
+        icon.className = 'fa-regular fa-eye-slash';
+      } else {
+        pw.type = 'password';
+        icon.className = 'fa-regular fa-eye';
+      }
+    }
+
+    // ── Tampilkan pesan dari query string ─────────────────────────────────────
+    // PERBAIKAN: handler error & success dipisah, keduanya independent
+    const params  = new URLSearchParams(window.location.search);
+    const error   = params.get('error');
+    const success = params.get('success');
+
+    const errorMessages = {
+      email:        'Email belum terdaftar. Silakan registrasi terlebih dahulu.',
+      password:     'Password yang kamu masukkan salah. Coba lagi.',
+      inactive:     'Akun kamu dinonaktifkan oleh admin. Hubungi administrator.',
+      empty:        'Email dan password tidak boleh kosong.',
+      server:       'Terjadi kesalahan server. Silakan coba lagi.',
+    };
+
+    const alertBox  = document.getElementById('alertBox');
+    const alertMsg  = document.getElementById('alertMsg');
+    const alertIcon = document.getElementById('alertIcon');
+
+    if (error) {
+      alertMsg.textContent = errorMessages[error] || 'Terjadi kesalahan. Silakan coba lagi.';
+      alertBox.classList.add('error', 'show');
+      alertIcon.className = 'fa-solid fa-circle-exclamation';
+      // Bersihkan URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
+    if (success === 'registered') {
+      alertMsg.textContent = '✓ Registrasi berhasil! Silakan masuk dengan akun kamu.';
+      alertBox.classList.add('success', 'show');
+      alertIcon.className = 'fa-solid fa-circle-check';
+      // Bersihkan URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
+    // Disable tombol saat submit (cegah double-click)
+    document.getElementById('loginForm').addEventListener('submit', function () {
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Profil Penjual | LapakThriftUMSU</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+
+:root{
+  --primary:#4f8cff;
+  --primary-dark:#1e3a8a;
+  --bg:#f4f7fb;
+  --text:#0f172a;
+  --muted:#64748b;
+  --border:#dbe4f0;
+  --shadow:0 10px 30px rgba(79,140,255,.10);
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:'Manrope',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+.container{
+  max-width:1250px;
+  margin:auto;
+  padding:30px 20px;
+}
+
+.back-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:20px;
+  text-decoration:none;
+  color:var(--primary-dark);
+  font-weight:700;
+}
+
+.seller-card{
+  background:white;
+  border-radius:28px;
+  padding:35px;
+  box-shadow:var(--shadow);
+  display:flex;
+  gap:30px;
+  flex-wrap:wrap;
+}
+
+.avatar{
+  width:140px;
+  height:140px;
+  border-radius:50%;
+  object-fit:cover;
+  border:5px solid #e0ebff;
+}
+
+.seller-info{
+  flex:1;
+}
+
+.seller-name{
+  font-size:2rem;
+  font-weight:800;
+  margin-bottom:8px;
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:8px 14px;
+  border-radius:999px;
+  background:#eaf2ff;
+  color:var(--primary-dark);
+  font-size:.85rem;
+  font-weight:700;
+}
+
+.bio{
+  margin-top:15px;
+  color:var(--muted);
+  line-height:1.8;
+}
+
+.stats{
+  margin-top:25px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px;
+}
+
+.stat-box{
+  background:#f8fbff;
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:18px;
+  text-align:center;
+}
+
+.stat-box h3{
+  color:var(--primary-dark);
+  font-size:1.4rem;
+  margin-bottom:5px;
+}
+
+.stat-box p{
+  color:var(--muted);
+  font-size:.85rem;
+}
+
+.action-buttons{
+  margin-top:25px;
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.btn{
+  border:none;
+  cursor:pointer;
+  border-radius:14px;
+  padding:13px 20px;
+  font-weight:800;
+  font-family:inherit;
+}
+
+.btn-chat{
+  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+  color:white;
+}
+
+.btn-follow{
+  background:white;
+  border:1px solid var(--border);
+}
+
+.section-title{
+  margin-top:40px;
+  margin-bottom:20px;
+  font-size:1.8rem;
+  font-weight:800;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+  gap:22px;
+}
+
+.product-card{
+  background:white;
+  border-radius:22px;
+  overflow:hidden;
+  box-shadow:var(--shadow);
+  transition:.3s;
+  cursor:pointer;
+}
+
+.product-card:hover{
+  transform:translateY(-6px);
+}
+
+.product-card img{
+  width:100%;
+  height:280px;
+  object-fit:cover;
+}
+
+.product-content{
+  padding:18px;
+}
+
+.product-name{
+  font-weight:700;
+  margin-bottom:8px;
+}
+
+.product-detail{
+  color:var(--muted);
+  font-size:.9rem;
+  margin-bottom:8px;
+}
+
+.product-price{
+  color:var(--primary-dark);
+  font-size:1.2rem;
+  font-weight:800;
+}
+
+@media(max-width:768px){
+
+.stats{
+  grid-template-columns:repeat(2,1fr);
+}
+
+.avatar{
+  width:110px;
+  height:110px;
+}
+
+.seller-name{
+  font-size:1.6rem;
+}
+
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<a href="userafterlogin.html" class="back-btn">
+<i class="fa-solid fa-arrow-left"></i>
+Kembali
+</a>
+
+<div class="seller-card">
+
+<img
+class="avatar"
+src="https://i.pravatar.cc/300?img=12"
+alt="Penjual">
+
+<div class="seller-info">
+
+<h1 class="seller-name">
+Muhammad Rizky
+</h1>
+
+<div id="sellerAcademic" class="bio" style="font-weight:700; margin-bottom:8px; display:none; color:var(--text);">
+</div>
+
+<div class="badge">
+<i class="fa-solid fa-graduation-cap"></i>
+Mahasiswa UMSU Terverifikasi
+</div>
+
+<p id="sellerBio" class="bio">
+Halo 👋 Saya mahasiswa Sistem Informasi UMSU.
+Menjual berbagai barang preloved mulai dari buku kuliah,
+alat kost, hingga elektronik dengan kondisi yang masih sangat layak pakai.
+</p>
+
+<div class="stats">
+
+<div class="stat-box">
+<h3 id="sellerRating">0.0 ★</h3>
+<p>Rating</p>
+</div>
+
+<div class="stat-box">
+<h3 id="sellerProductsCount">0</h3>
+<p>Produk</p>
+</div>
+
+<div class="stat-box">
+<h3 id="sellerFollowers">0</h3>
+<p>Followers</p>
+</div>
+
+<div class="stat-box">
+<h3 id="sellerJoined">-</h3>
+<p>Bergabung</p>
+</div>
+
+</div>
+
+<div class="action-buttons">
+
+<button class="btn btn-chat" onclick="window.location.href='chat.php'">
+<i class="fa-solid fa-comments"></i>
+Chat Penjual
+</button>
+
+<button class="btn btn-follow" onclick="followSeller()">
+<i class="fa-solid fa-user-plus"></i>
+<span id="followButtonText">Follow</span>
+</button>
+
+<button class="btn btn-follow" onclick="window.location.href='upload.html'">
+<i class="fa-solid fa-upload"></i>
+Upload Produk
+</button>
+  <button class="btn btn-follow" onclick="window.location.href='myproducts.html'">
+    <i class="fa-solid fa-boxes-stacked"></i>
+    Produk Saya
+  </button>
+
+</div>
+
+</div>
+
+</div>
+
+<h2 class="section-title">
+📦 Produk Saya
+</h2>
+
+<div class="grid" id="sellerProductsGrid"></div>
+
+</div>
+
+<script>
+  const currentUser = '';
+  const isSeller = localStorage.getItem('isSeller') === 'true';
+  const sellerProfile = JSON.parse(localStorage.getItem('lapak_seller_profile') || 'null') || {};
+
+  function getUserRecordByName(name){
+    if(!name) return null;
+    const users = JSON.parse(localStorage.getItem('lapak_users') || '[]');
+    return users.find(u => String(u.name || '').trim() === String(name).trim()) || null;
+  }
+
+  function formatCurrency(value){
+    return 'Rp ' + Number(value || 0).toLocaleString('id-ID');
+  }
+
+  function getSellerProducts(){
+    const allProducts = JSON.parse(localStorage.getItem('lapak_products') || '[]');
+    const sellerName = localStorage.getItem('lapak_current_seller') || currentUser || '';
+    return allProducts.filter(p => String(p.seller || '').includes(sellerName));
+  }
+
+  function renderSellerInfo(){
+    if(!isSeller || !currentUser){
+      sessionStorage.setItem('intended', 'seller.html');
+      window.location.href = 'userafterlogin.html';
+      return;
+    }
+
+    const sellerName = sellerProfile.name || currentUser;
+    const sellerUser = getUserRecordByName(sellerName);
+    const sellerBio = sellerProfile.bio || 'Penjual barang preloved UMSU dengan kualitas terbaik untuk mahasiswa.';
+    const sellerAcademic = [
+      sellerProfile.fakultas || sellerUser?.fakultas || '',
+      sellerProfile.jurusan || sellerUser?.jurusan || '',
+      sellerProfile.stambuk || sellerUser?.stambuk || ''
+    ].filter(Boolean).map((value, idx) => {
+      if(idx === 0) return `Fakultas ${value}`;
+      if(idx === 1) return `Jurusan ${value}`;
+      return `Stambuk ${value}`;
+    }).join(' · ');
+    const joinedAt = sellerProfile.joinedAt ? new Date(sellerProfile.joinedAt).getFullYear() : '-';
+    const products = getSellerProducts();
+    const rating = products.length ? (products.reduce((sum,p) => sum + (Number(p.rating) || 0), 0) / products.length).toFixed(1) : '0.0';
+
+    document.querySelector('.seller-name').textContent = sellerName;
+    const sellerAcademicEl = document.getElementById('sellerAcademic');
+    if(sellerAcademic){
+      sellerAcademicEl.textContent = sellerAcademic;
+      sellerAcademicEl.style.display = 'block';
+    } else {
+      sellerAcademicEl.style.display = 'none';
+    }
+    document.getElementById('sellerBio').textContent = sellerBio;
+    document.getElementById('sellerRating').textContent = `${rating} ★`;
+    document.getElementById('sellerProductsCount').textContent = products.length;
+    document.getElementById('sellerFollowers').textContent = sellerProfile.followers || 0;
+    document.getElementById('sellerJoined').textContent = joinedAt;
+
+    renderSellerProducts(products);
+  }
+
+  function renderSellerProducts(products){
+    const grid = document.getElementById('sellerProductsGrid');
+    if(!products || !products.length){
+      grid.innerHTML = '<div style="grid-column:1/-1;padding:30px;text-align:center;color:#64748b;font-weight:800;">Belum ada produk diunggah. Klik Upload Produk untuk mulai menjual.</div>';
+      return;
+    }
+
+    grid.innerHTML = products.map(p => {
+      const image = p.fotoDataUrl || p.img || 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=600&auto=format&fit=crop';
+      return `
+        <div class="product-card">
+          <img src="${image}" alt="${p.name || p.brand}">
+          <div class="product-content">
+            <div class="product-name">${p.name || p.brand || 'Produk'}</div>
+            <div class="product-detail">${p.category || p.cat || 'Lainnya'} · ${p.description ? p.description.slice(0, 45) + '...' : 'Deskripsi singkat...'}</div>
+            <div class="product-price">${formatCurrency(p.price)}</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  let isFollowed = false;
+
+  function followSeller(){
+    const btn = event.target.closest('button');
+    isFollowed = !isFollowed;
+    const text = isFollowed ? '<i class="fa-solid fa-check"></i> Mengikuti' : '<i class="fa-solid fa-user-plus"></i> Follow';
+    btn.innerHTML = text;
+  }
+
+  window.addEventListener('DOMContentLoaded', renderSellerInfo);
+</script>
+
+</body>
+</html>

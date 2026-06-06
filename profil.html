@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profil Saya – LapakThriftUMSU</title>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    :root{--primary:#4f8cff;--primary-dark:#1e3a8a;--text:#0f172a;--text-muted:#64748b;--bg:#f4f7fb;--white:#fff;--border:#dbe4f0;--radius:14px;--radius-lg:22px;--shadow:0 12px 40px rgba(79,140,255,.06);}
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Manrope',sans-serif;background:var(--bg);color:var(--text);line-height:1.5;}
+    a{color:inherit;text-decoration:none;}
+
+    nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);}
+    .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;height:72px;padding:0 18px;}
+    .logo{display:flex;align-items:center;gap:10px;font-family:'Manrope',sans-serif;font-weight:900;color:var(--primary);white-space:nowrap;}
+    .logo .icon{width:38px;height:38px;border-radius:12px;background:var(--primary);display:flex;align-items:center;justify-content:center;}
+    .logo .icon i{color:#fff;}
+    .logo span{color:var(--accent);}
+
+    .wrap{max-width:1120px;margin:18px auto;padding:0 18px;}
+
+    .hero{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;border-radius:var(--radius-lg);padding:20px 22px;box-shadow:var(--shadow);position:relative;overflow:hidden;}
+    .hero::before{content:'';position:absolute;top:-70px;right:-70px;width:280px;height:280px;background:rgba(255,255,255,.08);border-radius:50%;}
+    .hero-inner{position:relative;z-index:1;}
+
+    .grid{display:grid;grid-template-columns:1fr 1.2fr;gap:14px;margin-top:14px;}
+    @media (max-width:950px){.grid{grid-template-columns:1fr;}}
+
+    .panel{background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius-lg);box-shadow:0 12px 40px rgba(26,107,60,.05);overflow:hidden;}
+    .panel .head{padding:14px 16px;border-bottom:1px solid var(--border);}
+    .panel .head h2{font-family:'Manrope',sans-serif;font-size:1.15rem;}
+    .panel .body{padding:16px;}
+
+    .me-row{display:flex;gap:14px;align-items:center;}
+    .avatar{width:92px;height:92px;border-radius:50%;background:rgba(79,140,255,.18);border:1.5px solid rgba(79,140,255,.38);display:flex;align-items:center;justify-content:center;font-weight:1000;color:var(--primary-dark);font-size:1.7rem;overflow:hidden;}
+    .avatar img{width:100%;height:100%;object-fit:cover;display:block;}
+
+    .me-row b{display:block;font-size:1.2rem;font-family:'Manrope',sans-serif;}
+    .me-row .sub{color:var(--text-muted);font-weight:900;margin-top:4px;}
+
+    .kv{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;}
+    .kv .item{border:1.5px solid var(--border);background:var(--bg);border-radius:16px;padding:12px;}
+    .kv .item .num{font-family:'Manrope',sans-serif;font-weight:1000;font-size:1.4rem;color:var(--primary);}
+    .kv .item .lbl{color:var(--text-muted);font-weight:900;margin-top:6px;font-size:.85rem;}
+
+    .list{display:grid;gap:10px;margin-top:12px;}
+    .prod{border:1.5px solid var(--border);border-radius:16px;background:var(--bg);padding:12px;display:flex;gap:12px;align-items:flex-start;}
+    .thumb{width:74px;height:74px;border-radius:16px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.2rem;flex-shrink:0;overflow:hidden;}
+    .thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+
+    .prod b{display:block;margin-bottom:4px;}
+    .prod .meta{color:var(--text-muted);font-weight:900;font-size:.9rem;}
+
+    .stars{color:#f59e0b;}
+
+    .btn{border:none;border-radius:999px;padding:12px 16px;cursor:pointer;font-weight:1000;font-family:inherit;display:inline-flex;align-items:center;gap:10px;}
+    .btn.primary{background:var(--primary);color:#fff;}
+    .btn.primary:hover{filter:brightness(.95);transform:translateY(-1px);}
+    .btn.outline{background:transparent;border:1.5px solid var(--border);color:var(--text-muted);}
+
+    .row-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px;}
+
+    .field{margin-top:12px;}
+    .field label{display:block;font-weight:900;color:var(--text-muted);font-size:.85rem;margin-bottom:8px;}
+    input[type="file"], input[type="text"]{border:1.5px solid var(--border);background:var(--bg);border-radius:12px;padding:10px 12px;outline:none;}
+    input[type="file"]{padding:10px;}
+    .note{color:var(--text-muted);font-weight:800;font-size:.9rem;margin-top:8px;}
+
+    .top-hero-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:flex-end;}
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a href="index.html" class="logo">
+        <div class="icon"><i class="fa-solid fa-shop"></i></div>
+        Lapak<span>Thrift</span>UMSU
+      </a>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+        <a class="btn outline" href="upload.html"><i class="fa-solid fa-upload"></i> Upload</a>
+        <a class="btn outline" href="chat.php"><i class="fa-solid fa-comments"></i> Chat</a>
+        <button class="btn outline" type="button" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="wrap">
+    <div class="hero">
+      <div class="hero-inner">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+          <div>
+            <h1 style="font-family:'Manrope',sans-serif;font-size:1.8rem;margin-bottom:6px;"><i class="fa-solid fa-user"></i> Profil Saya</h1>
+            <p style="opacity:.9;max-width:620px;">Ubah nama profil, foto profil, dan lihat rating dari data transaksi (demo localStorage).</p>
+          </div>
+          <a class="btn outline" style="background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.25);color:#fff;" href="index.html">
+            <i class="fa-solid fa-arrow-left"></i> Kembali
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="panel">
+        <div class="head"><h2>Identitas</h2></div>
+        <div class="body">
+          <div class="me-row">
+            <div class="avatar" id="avatarBox">
+              <img id="avatarImg" style="display:none;" alt="avatar" />
+              <span id="avatarLetter">A</span>
+            </div>
+            <div>
+              <b id="userName">Ahmad R.</b>
+              <div class="sub" id="userSub">Mahasiswa UMSU · Penjual Terverifikasi (Demo)</div>
+            </div>
+          </div>
+
+          <div class="kv">
+            <div class="item"><div class="num" id="kpiSold">0</div><div class="lbl">Produk Terjual</div></div>
+            <div class="item"><div class="num" id="kpiRating">0.0★</div><div class="lbl">Rating Produk</div></div>
+            <div class="item"><div class="num" id="kpiTx">0+</div><div class="lbl">Jumlah Transaksi</div></div>
+            <div class="item"><div class="num" id="kpiChat">0</div><div class="lbl">Chat Dibalas</div></div>
+          </div>
+
+          <div class="field">
+            <label>Nama Profil</label>
+            <input type="text" id="namaProfileInput" placeholder="Nama profil" oninput="syncNamePreview(this)" />
+          </div>
+
+          <div class="field">
+            <label>Ganti Foto Profil</label>
+            <input type="file" accept="image/*" id="avatarInput" onchange="previewAvatar(this)" />
+            <div class="note">Foto disimpan ke <b>localStorage</b> (demo).</div>
+          </div>
+
+          <div class="row-actions">
+            <button class="btn primary" type="button" onclick="saveProfile()" id="saveProfileBtn"><i class="fa-solid fa-floppy-disk"></i> Simpan</button>
+
+            <button class="btn outline" type="button" onclick="resetProfile()"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="head"><h2>Produk Saya</h2></div>
+        <div class="body">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+            <div>
+              <div style="font-weight:1000;font-family:'Manrope',sans-serif;">Ulasan / Rating</div>
+              <div style="color:var(--text-muted);font-weight:900;margin-top:4px;">Rata-rata rating dari produk milik penjual demo.</div>
+            </div>
+            <div class="stars" id="starsRow" aria-hidden="true">
+              <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+            </div>
+          </div>
+
+          <div class="list" id="productList"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const STORE_KEY_PRODUCTS = 'lapak_products';
+    const STORE_KEY_PROFILE = 'lapak_profile';
+
+    function getProducts(){
+      return JSON.parse(localStorage.getItem(STORE_KEY_PRODUCTS) || '[]');
+    }
+
+    function getProfile(){
+      // jika user login, tampilkan default profil berdasarkan akun login
+      const currentName = '';
+      const base = { name: currentName || 'Ahmad R.' };
+
+      const saved = JSON.parse(localStorage.getItem(STORE_KEY_PROFILE) || 'null');
+      if(saved && typeof saved === 'object'){
+        // simpan foto tetap, tapi nama mengikuti akun login saat tidak ada perubahan
+        if(saved.name && saved.name !== base.name){
+          // tetap izinkan edit nama profil dari user
+          return saved;
+        }
+        return { ...base, ...saved };
+      }
+
+      return base;
+    }
+
+    function setProfile(p){
+      localStorage.setItem(STORE_KEY_PROFILE, JSON.stringify(p));
+    }
+
+    let _avatarPreview = null;
+
+    function applyProfileToUI(){
+      const p = getProfile();
+      const name = p.name || 'Ahmad R.';
+
+      document.getElementById('userName').textContent = name;
+      document.getElementById('namaProfileInput').value = name;
+
+      const letter = (name || 'A').trim().charAt(0).toUpperCase();
+      document.getElementById('avatarLetter').textContent = letter;
+
+      const foto = p.fotoDataUrl;
+      const avatarImg = document.getElementById('avatarImg');
+      if(foto){
+        avatarImg.src = foto;
+        avatarImg.style.display = 'block';
+        document.getElementById('avatarLetter').style.display = 'none';
+      } else {
+        avatarImg.style.display = 'none';
+        document.getElementById('avatarLetter').style.display = 'flex';
+      }
+    }
+
+    function syncNamePreview(input){
+      const v = (input.value || '').trim();
+      document.getElementById('userName').textContent = v || 'Ahmad R.';
+    }
+
+    function previewAvatar(input){
+      const file = input.files && input.files[0];
+      if(!file){ _avatarPreview = null; return; }
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        _avatarPreview = reader.result;
+        document.getElementById('avatarImg').src = _avatarPreview;
+        document.getElementById('avatarImg').style.display = 'block';
+        document.getElementById('avatarLetter').style.display = 'none';
+      };
+      reader.readAsDataURL(file);
+    }
+
+
+    function saveProfile(){
+      const name = (document.getElementById('namaProfileInput').value || '').trim();
+      if(!name){ alert('Nama tidak boleh kosong.'); return; }
+
+      const p = getProfile();
+      p.name = name;
+      if(_avatarPreview) p.fotoDataUrl = _avatarPreview;
+
+      setProfile(p);
+      alert('Profil tersimpan.');
+      applyProfileToUI();
+
+      // setelah simpan, nonaktifkan preview agar foto & nama tidak berubah otomatis
+      _avatarPreview = null;
+    }
+
+
+    function resetProfile(){
+      localStorage.removeItem(STORE_KEY_PROFILE);
+      _avatarPreview = null;
+      applyProfileToUI();
+      renderProducts();
+    }
+
+    function fmtStar(r){
+      const rating = Number(r || 0);
+      return Math.max(0, Math.min(5, rating));
+    }
+
+    function computeUserStats(products){
+      const currentSeller = localStorage.getItem('lapak_current_seller') || 'Anon';
+      const myProducts = products.filter(p => String(p.seller || '').includes(currentSeller) || String(p.seller||'') === ('Penjual ' + currentSeller));
+
+      const sold = myProducts.filter(p => p.status === 'terjual');
+      const ratingVals = myProducts.map(p => Number(p.rating || 0)).filter(n => n > 0);
+
+      const avgRating = ratingVals.length ? (ratingVals.reduce((a,b)=>a+b,0)/ratingVals.length) : 0;
+      const txCount = Number(localStorage.getItem('lapak_txCount') || 0);
+
+      return {
+        soldCount: sold.length,
+        avgRating,
+        txCount,
+        myProducts
+      };
+    }
+
+    function renderProducts(){
+      const list = document.getElementById('productList');
+      const products = getProducts();
+      const stats = computeUserStats(products);
+
+      document.getElementById('kpiSold').textContent = String(stats.soldCount);
+      document.getElementById('kpiTx').textContent = String(stats.txCount) + '+';
+
+      const avg = stats.avgRating;
+      document.getElementById('kpiRating').textContent = avg ? avg.toFixed(1) + '★' : '0.0★';
+
+      const starRow = document.getElementById('starsRow');
+      const stars = starRow.querySelectorAll('i');
+      const rounded = Math.round(fmtStar(avg));
+      stars.forEach((s, idx) => { s.style.opacity = idx < rounded ? '1' : '.25'; });
+
+      const myProducts = stats.myProducts.sort((a,b)=>(b.id||0)-(a.id||0));
+      if(myProducts.length === 0){
+        list.innerHTML = `<div class="prod" style="justify-content:center;align-items:center;"><div style="color:var(--text-muted);font-weight:900;">Belum ada produk untuk penjual demo ini.</div></div>`;
+        return;
+      }
+
+      list.innerHTML = myProducts.map(p => {
+        const thumb = p.fotoDataUrl
+          ? `<img src="${p.fotoDataUrl}" alt="foto" />`
+          : `<i class="fa-solid fa-box" aria-hidden="true"></i>`;
+
+        const statusLabel = p.status === 'terjual' ? 'Terjual' : (p.status === 'tersedia' ? 'Tersedia' : 'Pending');
+
+        return `
+          <div class="prod">
+            <div class="thumb">${thumb}</div>
+            <div>
+              <b>${p.name || '-'}</b>
+              <div class="meta">Rp ${Number(p.price || 0).toLocaleString('id-ID')} · Status: ${statusLabel} · Kategori: ${p.category || '-'}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function requireLogin(){
+      const currentUser = '';
+      const logged = false;
+      if(logged && currentUser){
+        return true;
+      }
+      sessionStorage.setItem('intended','profil.html');
+      window.location.href = 'login.html';
+      return false;
+    }
+
+    function logout(){
+      localStorage.removeItem('lapak_current_user');
+      localStorage.removeItem('lapak_current_seller');
+      window.location.href = 'index.html';
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      if(!requireLogin()) return;
+      applyProfileToUI();
+      renderProducts();
+    });
+
+    window.addEventListener('focus', () => {
+      if(!requireLogin()) return;
+      applyProfileToUI();
+      renderProducts();
+    });
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daftar Akun – LapakThriftUMSU</title>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Clash+Display:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root{
+      --primary:#4f8cff;
+      --primary-dark:#1e3a8a;
+      --accent:#7dd3fc;
+      --text:#0f172a;
+      --text-muted:#64748b;
+      --bg:#f4f7fb;
+      --white:#ffffff;
+      --border:#dbe4f0;
+      --danger:#ef4444;
+      --radius:16px;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Manrope',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+    .page-wrap{display:grid;grid-template-columns:1.15fr .85fr;min-height:100vh;}
+    @media(max-width:980px){.page-wrap{grid-template-columns:1fr;}}
+
+    /* Left panel */
+    .left-panel{background:linear-gradient(160deg,var(--primary) 0%,var(--primary-dark) 100%);padding:60px 56px;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden;}
+    .left-panel::before{content:'';position:absolute;top:-100px;right:-100px;width:280px;height:280px;background:rgba(255,255,255,0.08);border-radius:50%;filter:blur(10px);}
+    .logo{font-family:'Clash Display',sans-serif;font-size:1.4rem;font-weight:800;color:#fff;text-decoration:none;display:flex;align-items:center;gap:10px;position:relative;z-index:1;}
+    .logo span{color:var(--accent);}
+    .logo-icon{width:40px;height:40px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;}
+    .logo-icon i{color:#fff;font-size:18px;}
+    .left-content{position:relative;z-index:1;margin-top:28px;}
+    .left-content h2{font-family:'Clash Display',sans-serif;font-size:2.2rem;font-weight:800;line-height:1.2;color:#fff;margin-bottom:18px;}
+    .left-content h2 span{color:var(--accent);}
+    .left-content p{color:rgba(255,255,255,0.85);font-size:1rem;line-height:1.7;margin-bottom:32px;}
+    .feature-list{display:flex;flex-direction:column;gap:14px;}
+    .feature-item{display:flex;align-items:center;gap:12px;}
+    .feat-icon{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .feat-icon i{color:var(--accent);font-size:15px;}
+    .feature-item span{color:rgba(255,255,255,0.85);font-size:.95rem;font-weight:600;}
+    .left-footer{position:relative;z-index:1;margin-top:24px;}
+    .trust-badges{display:flex;gap:16px;flex-wrap:wrap;}
+    .badge{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.8);padding:6px 14px;border-radius:50px;font-size:.78rem;font-weight:600;}
+
+    /* Right panel */
+    .right-panel{display:flex;align-items:center;justify-content:center;padding:48px 56px;overflow-y:auto;}
+    .form-box{width:100%;max-width:500px;background:#fff;padding:40px;border-radius:24px;box-shadow:0 10px 40px rgba(79,140,255,0.12);}
+    .form-header{margin-bottom:24px;}
+    .form-header h1{font-family:'Clash Display',sans-serif;font-size:1.8rem;font-weight:800;margin-bottom:6px;}
+    .form-header p{color:var(--text-muted);font-size:.95rem;}
+
+    /* Alert */
+    .alert{display:none;align-items:center;gap:10px;border-radius:14px;padding:10px 12px;font-weight:700;margin-bottom:16px;font-size:.9rem;}
+    .alert.show{display:flex;}
+    .alert.error{background:rgba(239,68,68,.10);border:1.5px solid rgba(239,68,68,.30);color:#b91c1c;}
+    .alert.warning{background:rgba(245,158,11,.10);border:1.5px solid rgba(245,158,11,.30);color:#b45309;}
+
+    /* Form grid */
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+    .form-group{display:flex;flex-direction:column;}
+    .form-group.full{grid-column:1/3;}
+    .form-group label{margin-bottom:7px;font-size:.9rem;font-weight:700;color:var(--text);}
+    .form-group label span{color:var(--danger);}
+    .input-wrap{position:relative;}
+    .input-wrap i.icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:14px;}
+    .form-group input,.form-group select{
+      width:100%;padding:12px 14px 12px 40px;
+      border:1.5px solid var(--border);border-radius:12px;outline:none;
+      font-family:inherit;font-size:.93rem;font-weight:600;color:var(--text);
+      background:var(--bg);transition:.2s;
+    }
+    .form-group input:focus,.form-group select:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(79,140,255,.12);background:#fff;}
+
+    .btn-register{
+      width:100%;margin-top:20px;padding:14px;border:none;border-radius:14px;
+      background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+      color:#fff;font-size:1rem;font-weight:800;cursor:pointer;transition:.3s;
+      display:flex;align-items:center;justify-content:center;gap:10px;font-family:inherit;
+    }
+    .btn-register:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(79,140,255,0.25);}
+    .btn-register:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+
+    .login-link{text-align:center;margin-top:18px;color:var(--text-muted);font-size:.9rem;font-weight:600;}
+    .login-link a{color:var(--primary);text-decoration:none;font-weight:800;}
+    .login-link a:hover{text-decoration:underline;}
+
+    @media(max-width:980px){
+      .left-panel{display:none;}
+      .right-panel{padding:30px 20px;}
+      .form-box{padding:28px 20px;}
+      .form-grid{grid-template-columns:1fr;}
+      .form-group.full{grid-column:auto;}
+    }
+  </style>
+</head>
+<body>
+  <div class="page-wrap">
+    <div class="left-panel">
+      <a href="index.html" class="logo">
+        <div class="logo-icon"><i class="fa-solid fa-shop"></i></div>
+        Lapak<span>Thrift</span>UMSU
+      </a>
+      <div class="left-content">
+        <h2>Gabung Bersama<br><span>Marketplace</span> Mahasiswa UMSU</h2>
+        <p>Jual beli barang preloved lebih hemat, aman, dan terpercaya khusus mahasiswa UMSU.</p>
+        <div class="feature-list">
+          <div class="feature-item"><div class="feat-icon"><i class="fa-solid fa-user-check"></i></div><span>Verifikasi Mahasiswa UMSU</span></div>
+          <div class="feature-item"><div class="feat-icon"><i class="fa-solid fa-comments"></i></div><span>Chat langsung dengan penjual</span></div>
+          <div class="feature-item"><div class="feat-icon"><i class="fa-solid fa-shield-halved"></i></div><span>Transaksi lebih aman</span></div>
+        </div>
+      </div>
+      <div class="left-footer">
+        <div class="trust-badges">
+          <span class="badge">✓ Verifikasi Mahasiswa</span>
+          <span class="badge">✓ Gratis Daftar</span>
+          <span class="badge">✓ 100% Aman</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <div class="form-box">
+        <div class="form-header">
+          <h1>Daftar Akun</h1>
+          <p>Isi data kamu untuk mulai berbelanja dan jualan</p>
+        </div>
+
+        <!-- Alert error (dari query string) -->
+        <div class="alert" id="alertBox">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <span id="alertMsg"></span>
+        </div>
+
+        <form action="register.php" method="POST" id="registerForm">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Nama Lengkap <span>*</span></label>
+              <div class="input-wrap">
+                <i class="fa-solid fa-user icon"></i>
+                <input type="text" name="nama" id="nameInput"
+                       placeholder="Nama lengkap" required />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Email <span>*</span></label>
+              <div class="input-wrap">
+                <i class="fa-solid fa-envelope icon"></i>
+                <input type="email" name="email" id="emailInput"
+                       placeholder="email@umsu.ac.id" required />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Password <span>*</span></label>
+              <div class="input-wrap">
+                <i class="fa-solid fa-lock icon"></i>
+                <input type="password" name="password" id="pwInput"
+                       placeholder="Min. 6 karakter" required minlength="6" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Nomor HP <span>*</span></label>
+              <div class="input-wrap">
+                <i class="fa-solid fa-phone icon"></i>
+                <input type="tel" name="no_hp" id="phoneInput"
+                       placeholder="08xx xxxx xxxx" required />
+              </div>
+            </div>
+
+            <div class="form-group full">
+              <label>Alamat <span>*</span></label>
+              <div class="input-wrap">
+                <i class="fa-solid fa-location-dot icon"></i>
+                <input type="text" name="alamat" id="addressInput"
+                       placeholder="Alamat lengkap" required />
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-register" id="submitBtn">
+            <i class="fa-solid fa-user-plus"></i>
+            Daftar Sekarang
+          </button>
+        </form>
+
+        <div class="login-link">
+          Sudah punya akun? <a href="login.html">Masuk di sini</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ── Tampilkan pesan error dari query string ───────────────────────────────
+    const params    = new URLSearchParams(window.location.search);
+    const error     = params.get('error');
+    const alertBox  = document.getElementById('alertBox');
+    const alertMsg  = document.getElementById('alertMsg');
+
+    const errorMessages = {
+      validasi:     'Data tidak lengkap atau tidak valid. Periksa kembali isian kamu.',
+      email_exists: 'Email sudah terdaftar. Gunakan email lain atau masuk dengan akun yang ada.',
+      server:       'Terjadi kesalahan server. Silakan coba lagi.',
+    };
+
+    if (error) {
+      alertMsg.textContent = errorMessages[error] || 'Terjadi kesalahan. Silakan coba lagi.';
+      alertBox.classList.add('error', 'show');
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
+    // Disable tombol saat submit (cegah double-click)
+    document.getElementById('registerForm').addEventListener('submit', function () {
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mendaftar...';
+    });
+  </script>
+</body>
+</html>

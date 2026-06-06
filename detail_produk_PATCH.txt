@@ -1,0 +1,35 @@
+══════════════════════════════════════════════════════════════════
+  PATCH detail_produk.php — Tambahkan &from_produk ke 2 tombol
+══════════════════════════════════════════════════════════════════
+
+Cari ke-2 kemunculan baris ini (ada di blok if & else seller buttons):
+
+  SEBELUM:
+    href="seller_profil.php?id=<?= (int)$produk['seller_id'] ?>"
+
+  SETELAH (tambahkan &from_produk=...):
+    href="seller_profil.php?id=<?= (int)$produk['seller_id'] ?>&from_produk=<?= $produkId ?>"
+
+Letaknya di dua tempat dalam file (sekitar baris 280 & 295):
+
+─── Blok 1 (di dalam if ($isLoggedIn && !$isSeller)) ───────────
+<div class="seller-btns-row">
+  <a class="btn-profil"
+     href="seller_profil.php?id=<?= (int)$produk['seller_id'] ?>&from_produk=<?= $produkId ?>">
+    <i class="fa-solid fa-store"></i> Lihat Profil Toko
+  </a>
+</div>
+
+─── Blok 2 (di dalam else — untuk tamu/guest) ──────────────────
+<div class="seller-btns-row">
+  <a class="btn-profil"
+     href="seller_profil.php?id=<?= (int)$produk['seller_id'] ?>&from_produk=<?= $produkId ?>">
+    <i class="fa-solid fa-store"></i> Lihat Profil Toko
+  </a>
+</div>
+
+══════════════════════════════════════════════════════════════════
+  TIDAK ADA perubahan lain di detail_produk.php.
+  File review_produk.php juga dipakai oleh detail_produk.php
+  (endpoint sudah sama, tidak perlu ganti).
+══════════════════════════════════════════════════════════════════

@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>LapakThriftUMSU</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+:root{
+  --primary:#4f8cff;
+  --primary-dark:#1e3a8a;
+  --bg:#f4f7fb;
+  --text:#0f172a;
+  --text-muted:#64748b;
+  --border:#dbe4f0;
+  --shadow:0 10px 30px rgba(79,140,255,.10);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Manrope',sans-serif;background:var(--bg);color:var(--text);}
+a{text-decoration:none;color:inherit;}
+
+/* ====== NAV ====== */
+nav{
+  position:sticky;top:0;z-index:1000;
+  background:rgba(255,255,255,.95);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid #eef2f7;
+}
+.nav-inner{
+  max-width:1300px;margin:auto;
+  padding:14px 20px;
+  display:flex;align-items:center;gap:14px;
+}
+.logo{
+  display:flex;align-items:center;gap:10px;
+  font-size:1.3rem;font-weight:800;
+  color:var(--primary-dark);white-space:nowrap;flex-shrink:0;
+}
+.logo .icon{
+  width:42px;height:42px;border-radius:12px;
+  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+  display:flex;align-items:center;justify-content:center;
+  color:white;font-size:1rem;
+}
+.logo span{color:var(--primary);}
+
+.search-wrap{flex:1;min-width:0;position:relative;}
+.search-bar{
+  display:flex;align-items:center;gap:8px;
+  background:white;border-radius:50px;
+  padding:10px 14px;border:1.5px solid var(--border);
+  box-shadow:var(--shadow);
+  transition:all .35s cubic-bezier(.4,0,.2,1);
+}
+.search-bar.expanded{border-color:var(--primary);box-shadow:0 0 0 4px rgba(79,140,255,.15);}
+.search-bar i{color:var(--text-muted);font-size:1rem;flex-shrink:0;}
+.search-bar input{width:100%;border:none;outline:none;background:transparent;font-family:inherit;font-size:.97rem;color:var(--text);}
+.search-bar .search-btn{
+  border:none;
+  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+  color:white;padding:9px 16px;border-radius:50px;
+  font-weight:800;cursor:pointer;font-size:.9rem;
+  white-space:nowrap;transition:opacity .2s;
+}
+.search-bar .search-btn:hover{opacity:.9;}
+
+.search-results{
+  display:none;position:absolute;
+  top:calc(100% + 8px);left:0;right:0;
+  background:white;border-radius:18px;
+  border:1px solid var(--border);
+  box-shadow:0 20px 50px rgba(79,140,255,.15);
+  z-index:999;overflow:hidden;
+}
+.search-results.show{display:block;}
+.search-result-item{padding:12px 18px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:background .2s;}
+.search-result-item:hover{background:#f0f6ff;}
+.search-result-item .thumb{width:42px;height:42px;border-radius:10px;object-fit:cover;flex-shrink:0;}
+.search-result-item .info .name{font-weight:700;font-size:.9rem;}
+.search-result-item .info .price{font-size:.85rem;color:var(--primary-dark);font-weight:800;}
+.search-empty{padding:20px;text-align:center;color:var(--text-muted);font-size:.9rem;}
+
+/* Desktop nav links */
+.nav-links{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.pill{
+  padding:9px 14px;border-radius:999px;border:1px solid var(--border);
+  background:white;font-weight:700;display:flex;align-items:center;gap:6px;
+  cursor:pointer;transition:.25s;font-family:inherit;font-size:.88rem;color:var(--text);
+}
+.pill:hover{transform:translateY(-2px);box-shadow:var(--shadow);}
+
+.signin-btn{
+  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+  color:white;border:none;font-weight:800;
+}
+.signin-btn:hover{transform:translateY(-2px);opacity:.95;}
+
+/* ====== HAMBURGER (mobile only, for login btn) ====== */
+.hamburger-btn{
+  display:none;
+  width:42px;height:42px;border-radius:12px;
+  background:white;border:1.5px solid var(--border);
+  align-items:center;justify-content:center;
+  cursor:pointer;flex-shrink:0;
+  transition:.2s;color:var(--primary-dark);font-size:1.1rem;
+}
+.hamburger-btn:hover{background:#f0f6ff;border-color:var(--primary);}
+
+/* ====== MOBILE MENU OVERLAY ====== */
+.mobile-menu-overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(15,23,42,.5);backdrop-filter:blur(4px);
+  z-index:1998;opacity:0;transition:opacity .3s;
+}
+.mobile-menu-overlay.open{display:block;opacity:1;}
+
+.mobile-menu{
+  position:fixed;top:0;right:0;
+  width:280px;height:100vh;
+  background:white;z-index:1999;
+  transform:translateX(100%);
+  transition:transform .35s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column;
+  box-shadow:-10px 0 40px rgba(15,23,42,.15);
+}
+.mobile-menu.open{transform:translateX(0);}
+
+.mobile-menu-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:20px;
+  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+  color:white;
+}
+.mobile-menu-header .m-logo{font-weight:800;font-size:1rem;}
+.mobile-menu-close{
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(255,255,255,.2);border:none;color:white;
+  font-size:1.1rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:.2s;
+}
+.mobile-menu-close:hover{background:rgba(255,255,255,.3);}
+
+.mobile-nav-items{flex:1;padding:20px;display:flex;flex-direction:column;gap:10px;}
+
+.mobile-login-btn{
+  width:100%;display:flex;align-items:center;justify-content:center;gap:10px;
+  padding:16px;border-radius:14px;
+  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+  color:white;border:none;
+  font-family:inherit;font-size:1rem;font-weight:800;
+  cursor:pointer;transition:.2s;
+  box-shadow:0 8px 20px rgba(79,140,255,.3);
+}
+.mobile-login-btn:hover{opacity:.9;transform:translateY(-2px);}
+
+.mobile-info{
+  padding:20px;margin:0 20px;
+  background:#f8fafc;border-radius:16px;
+  border:1px solid var(--border);
+  text-align:center;
+}
+.mobile-info p{font-size:.88rem;color:var(--text-muted);line-height:1.6;}
+.mobile-info strong{color:var(--primary-dark);}
+
+/* ====== HERO ====== */
+.wrap{max-width:1300px;margin:24px auto;padding:0 20px;}
+
+.hero{
+  position:relative;overflow:hidden;
+  border-radius:28px;color:white;margin-bottom:28px;padding:40px;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background-image:url('https://images.unsplash.com/photo-1562774053-701939374585?w=1200&auto=format&fit=crop');
+  background-size:cover;background-position:center;
+  filter:brightness(.5) saturate(1.1);
+}
+.hero-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(30,58,138,.85) 0%,rgba(79,140,255,.6) 100%);
+}
+.hero-content{position:relative;z-index:2;}
+.hero-main{display:flex;align-items:center;gap:36px;flex-wrap:wrap;}
+.hero-left{flex:1;min-width:260px;}
+.hero h1{font-size:3.2rem;line-height:1;margin-bottom:16px;font-weight:800;}
+.hero h1 span{color:#7dd3fc;}
+.hero p{max-width:580px;line-height:1.8;opacity:.95;}
+
+.hero-buttons{margin-top:25px;display:flex;gap:15px;flex-wrap:wrap;}
+.hero-btn{
+  border:none;cursor:pointer;
+  padding:14px 24px;border-radius:14px;
+  font-size:.95rem;font-weight:800;transition:.3s;
+  display:flex;align-items:center;gap:10px;font-family:inherit;
+}
+.primary-btn{background:white;color:var(--primary-dark);}
+.primary-btn:hover{transform:translateY(-3px);box-shadow:0 10px 25px rgba(255,255,255,.3);}
+.secondary-btn{
+  background:rgba(255,255,255,.15);color:white;
+  border:1px solid rgba(255,255,255,.25);backdrop-filter:blur(10px);
+}
+.secondary-btn:hover{background:rgba(255,255,255,.22);transform:translateY(-3px);}
+
+.hero-slideshow{flex:0 0 300px;position:relative;height:300px;}
+.slide-img{
+  position:absolute;inset:0;border-radius:22px;overflow:hidden;
+  opacity:0;transform:scale(.94) translateX(30px);
+  transition:opacity .7s ease,transform .7s ease;
+  box-shadow:0 20px 50px rgba(0,0,0,.35);
+}
+.slide-img.active{opacity:1;transform:scale(1) translateX(0);}
+.slide-img img{width:100%;height:100%;object-fit:cover;}
+.slide-caption{
+  position:absolute;bottom:14px;left:14px;right:14px;
+  background:rgba(15,23,42,.6);backdrop-filter:blur(10px);
+  border-radius:12px;padding:10px 14px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.slide-caption span{font-weight:800;font-size:.82rem;}
+.slide-tag{background:rgba(255,255,255,.2);border-radius:999px;padding:4px 10px;font-size:.72rem;font-weight:700;}
+.slide-dots{position:absolute;top:14px;right:14px;display:flex;gap:6px;}
+.sdot{height:8px;width:8px;border-radius:999px;background:rgba(255,255,255,.4);cursor:pointer;transition:.35s;}
+.sdot.active{width:22px;background:white;}
+
+.hero-stats{
+  margin-top:30px;display:grid;grid-template-columns:repeat(3,1fr);gap:15px;
+}
+.hero-stat{
+  background:rgba(255,255,255,.12);backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.15);
+  padding:18px;border-radius:18px;
+  display:flex;align-items:center;gap:12px;transition:.3s;
+}
+.hero-stat:hover{transform:translateY(-4px);background:rgba(255,255,255,.18);}
+.hero-stat span{font-size:1.8rem;}
+.hero-stat small{display:block;opacity:.8;font-size:.8rem;}
+.hero-stat strong{font-size:1.1rem;font-weight:800;}
+
+/* ====== SECTION ====== */
+.section-header{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  margin-bottom:20px;gap:20px;flex-wrap:wrap;
+}
+.section-title{font-size:2rem;font-weight:800;color:var(--text);margin-bottom:6px;}
+.section-subtitle{color:var(--text-muted);font-size:.95rem;}
+.product-info{
+  background:white;padding:10px 16px;border-radius:999px;
+  border:1px solid var(--border);box-shadow:var(--shadow);
+  font-weight:700;color:var(--primary-dark);
+}
+
+.chips{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px;}
+.chip{
+  padding:11px 18px;border-radius:999px;border:1px solid var(--border);
+  background:white;font-weight:700;cursor:pointer;font-family:inherit;font-size:.88rem;transition:.25s;
+}
+.chip.active{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:white;border:none;}
+.chip:hover:not(.active){box-shadow:var(--shadow);transform:translateY(-1px);}
+
+/* ====== GRID ====== */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:22px;}
+.product-card{cursor:pointer;transition:.3s;}
+.product-card:hover{transform:translateY(-5px);}
+.product-image{position:relative;width:100%;height:340px;border-radius:18px;overflow:hidden;background:#ddd;}
+.product-image img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s;}
+.product-card.sold .product-image img{filter:brightness(.75) saturate(.8);}
+.sold-badge{
+  position:absolute;top:16px;left:16px;background:#dc2626;color:white;
+  padding:8px 12px;border-radius:999px;font-size:.82rem;font-weight:800;
+  box-shadow:0 10px 25px rgba(0,0,0,.12);
+}
+.product-card:hover .product-image img{transform:scale(1.04);}
+.wishlist-heart{
+  position:absolute;right:13px;bottom:13px;
+  width:50px;height:50px;border:none;border-radius:50%;
+  background:white;box-shadow:0 8px 24px rgba(0,0,0,.18);
+  font-size:1.25rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:transform .2s;
+}
+.wishlist-heart:hover{transform:scale(1.1);}
+.wishlist-heart i{transition:color .3s,transform .3s;}
+.wishlist-heart.loved i{color:#ef4444;transform:scale(1.2);}
+.heart-anim{
+  position:fixed;pointer-events:none;font-size:1.8rem;color:#ef4444;
+  animation:heartPop .6s ease forwards;
+}
+@keyframes heartPop{
+  0%{transform:scale(0) translate(-50%,-50%);opacity:1;}
+  60%{transform:scale(1.5) translate(-50%,-50%);opacity:1;}
+  100%{transform:scale(1.2) translate(-50%,-50%) translateY(-40px);opacity:0;}
+}
+.product-content{padding:13px 5px 0;}
+.brand-name{font-size:1rem;font-weight:600;color:#475569;margin-bottom:3px;}
+.product-detail{color:#64748b;margin-bottom:8px;font-size:.9rem;}
+.product-price{font-size:1.2rem;font-weight:800;}
+
+/* ====== WISHLIST PANEL ====== */
+#wishlistPanel{
+  position:fixed;right:20px;top:90px;width:360px;
+  background:white;padding:22px;border-radius:24px;
+  box-shadow:0 20px 60px rgba(0,0,0,.18);z-index:2000;
+  transform:translateX(120%);transition:transform .4s cubic-bezier(.4,0,.2,1);
+}
+#wishlistPanel.open{transform:translateX(0);}
+.panel-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+.panel-header h2{font-size:1.2rem;}
+.panel-close{border:none;background:none;font-size:1.3rem;cursor:pointer;color:var(--text-muted);}
+.wishlist-items{max-height:400px;overflow-y:auto;}
+.wishlist-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);}
+.wishlist-item img{width:54px;height:54px;border-radius:10px;object-fit:cover;flex-shrink:0;}
+.wi-info{flex:1;}
+.wi-brand{font-weight:700;font-size:.92rem;}
+.wi-price{color:var(--primary-dark);font-weight:800;font-size:.9rem;}
+.wi-remove{border:none;background:none;color:#ef4444;cursor:pointer;font-size:1rem;}
+.empty-wishlist{text-align:center;color:var(--text-muted);padding:30px 0;font-size:.9rem;}
+.close-btn{
+  width:100%;border:none;padding:13px;border-radius:14px;
+  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+  color:white;font-weight:800;cursor:pointer;margin-top:16px;
+  font-family:inherit;font-size:.95rem;
+}
+
+/* ====== FOOTER ====== */
+footer{margin-top:60px;background:#0f172a;color:white;padding:40px 20px;}
+.footer-inner{max-width:1200px;margin:auto;}
+.footer-bottom{
+  margin-top:20px;padding-top:20px;
+  border-top:1px solid rgba(255,255,255,.1);
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:20px;
+}
+.social{display:flex;gap:12px;}
+.social a{
+  width:38px;height:38px;border-radius:50%;
+  background:rgba(255,255,255,.1);
+  display:flex;align-items:center;justify-content:center;transition:.2s;
+}
+.social a:hover{background:rgba(255,255,255,.2);}
+
+/* ====== RESPONSIVE ====== */
+@media screen and (max-width:900px){
+  .nav-links{ display:none !important; }
+  .hamburger-btn{ display:flex; }
+  .search-bar .search-btn{ display:none; }
+}
+
+@media screen and (max-width:768px){
+  .wrap{padding:0 15px;}
+  .hero{padding:28px 24px;}
+  .hero h1{font-size:2.2rem;}
+  .hero-slideshow{flex:none;width:100%;height:220px;}
+  .hero-stats{grid-template-columns:1fr;}
+  .section-header{flex-direction:column;align-items:flex-start;}
+  .product-info{width:100%;text-align:center;}
+  .grid{grid-template-columns:repeat(2,1fr);gap:15px;}
+  .product-image{height:230px;}
+}
+
+@media screen and (max-width:480px){
+  body{overflow-x:hidden;}
+  .nav-inner{padding:12px;}
+  .logo{font-size:1rem;}
+  .logo .icon{width:36px;height:36px;}
+  .search-bar{padding:9px 12px;}
+  .hero{padding:20px;border-radius:20px;}
+  .hero h1{font-size:1.75rem;line-height:1.1;}
+  .hero p{font-size:.9rem;}
+  .hero-buttons{flex-direction:column;}
+  .hero-btn{width:100%;justify-content:center;}
+  .hero-stat{padding:14px;}
+  .section-title{font-size:1.4rem;}
+  .chips{flex-wrap:nowrap;overflow-x:auto;padding-bottom:6px;}
+  .chips::-webkit-scrollbar{display:none;}
+  .chip{flex-shrink:0;}
+  .grid{grid-template-columns:1fr 1fr;gap:12px;}
+  .product-image{height:200px;}
+  #wishlistPanel{width:calc(100vw - 30px);right:15px;top:70px;}
+  .mobile-menu{width:100%;}
+}
+</style>
+</head>
+<body>
+
+<!-- ====== NAV ====== -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <div class="icon"><i class="fa-solid fa-shop"></i></div>
+      lapakthrift<span>UMSU</span>
+    </a>
+
+    <div class="search-wrap">
+      <div class="search-bar" id="searchBar">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="searchInput" placeholder="Cari barang, buku, alat kost..."
+          oninput="handleSearch()" onfocus="expandSearch()" onblur="collapseSearch()"/>
+        <button class="search-btn" onclick="doSearch()">Cari</button>
+      </div>
+      <div class="search-results" id="searchResults"></div>
+    </div>
+
+    <!-- Desktop: hanya tombol login -->
+    <div class="nav-links" id="navLinks">
+      <button class="pill signin-btn" onclick="goLogin()">
+        <i class="fa-solid fa-right-to-bracket"></i> Login
+      </button>
+    </div>
+
+    <!-- Hamburger (mobile/tablet) -->
+    <button class="hamburger-btn" id="hamburgerBtn" onclick="openMobileMenu()" aria-label="Menu">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+  </div>
+</nav>
+
+<!-- ====== MOBILE MENU ====== -->
+<div class="mobile-menu-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-menu-header">
+    <div class="m-logo"><i class="fa-solid fa-shop"></i> lapakthriftUMSU</div>
+    <button class="mobile-menu-close" onclick="closeMobileMenu()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+
+  <div class="mobile-nav-items">
+    <!-- Info singkat -->
+    <div class="mobile-info">
+      <p>Selamat datang di <strong>LapakThriftUMSU</strong>!<br>Login untuk mulai berjualan atau melihat produk lengkap.</p>
+    </div>
+
+    <!-- Tombol Login besar -->
+    <button class="mobile-login-btn" onclick="closeMobileMenu(); goLogin()">
+      <i class="fa-solid fa-right-to-bracket"></i>
+      Login ke Akun
+    </button>
+  </div>
+</div>
+
+<!-- ====== MAIN CONTENT ====== -->
+<div class="wrap">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-main">
+        <div class="hero-left">
+          <h1>LAPAK THRIFT <br>FOR <span>UMSU</span></h1>
+          <p>Platform jual beli barang preloved mahasiswa UMSU dengan harga lebih hemat dan terjangkau.</p>
+          <div class="hero-buttons">
+            <button class="hero-btn primary-btn" onclick="goSell()">
+              <i class="fa-solid fa-store"></i> Mulai Berjualan
+            </button>
+            <button class="hero-btn secondary-btn" onclick="showHowItWorks()">
+              <i class="fa-solid fa-circle-play"></i> Cara Kerjanya
+            </button>
+          </div>
+        </div>
+
+        <!-- Slideshow -->
+        <div class="hero-slideshow">
+          <div class="slide-img active" id="slide-0">
+            <img src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=600&auto=format&fit=crop" alt="Fashion">
+            <div class="slide-caption">
+              <span>👗 Fashion Preloved</span>
+              <span class="slide-tag">Hemat s/d 70%</span>
+            </div>
+          </div>
+          <div class="slide-img" id="slide-1">
+            <img src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=600&auto=format&fit=crop" alt="Thrift">
+            <div class="slide-caption">
+              <span>🛍️ Belanja Thrift</span>
+              <span class="slide-tag">Pilihan Terlengkap</span>
+            </div>
+          </div>
+          <div class="slide-img" id="slide-2">
+            <img src="https://images.unsplash.com/photo-1601924994987-69e26d50dc26?w=600&auto=format&fit=crop" alt="Buku">
+            <div class="slide-caption">
+              <span>📚 Buku & Alat Kuliah</span>
+              <span class="slide-tag">Mulai Rp 10.000</span>
+            </div>
+          </div>
+          <div class="slide-dots">
+            <div class="sdot active" id="sd0" onclick="goSlide(0)"></div>
+            <div class="sdot" id="sd1" onclick="goSlide(1)"></div>
+            <div class="sdot" id="sd2" onclick="goSlide(2)"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <span>🕒</span>
+          <div><small>Waktu Lokal</small><strong id="clockDisplay">00:00:00</strong></div>
+        </div>
+        <div class="hero-stat">
+          <span>👨‍🎓</span>
+          <div><small>Penjual Aktif</small><strong id="sellerCount">5</strong></div>
+        </div>
+        <div class="hero-stat">
+          <span>📦</span>
+          <div><small>Total Produk</small><strong id="productCount">0</strong></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION HEADER -->
+  <div class="section-header">
+    <div>
+      <h2 class="section-title">Produk For u</h2>
+      <p class="section-subtitle">Temukan barang preloved terbaru dari mahasiswa UMSU</p>
+    </div>
+    <div class="product-info">
+      <span id="totalProductText">8 Produk Tersedia</span>
+    </div>
+  </div>
+
+  <div class="chips">
+    <button class="chip active" onclick="filterChip(this,'Semua')">Semua</button>
+    <button class="chip" onclick="filterChip(this,'Fashion')">Fashion</button>
+    <button class="chip" onclick="filterChip(this,'Elektronik')">Elektronik</button>
+    <button class="chip" onclick="filterChip(this,'Buku')">Buku</button>
+    <button class="chip" onclick="filterChip(this,'Alat Kost')">Alat Kost</button>
+  </div>
+
+  <div class="grid" id="productGrid"></div>
+</div>
+
+<!-- Wishlist Panel -->
+<div id="wishlistPanel">
+  <div class="panel-header">
+    <h2>❤️ Wishlist ku</h2>
+    <button class="panel-close" onclick="toggleWishlist()"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="wishlist-items" id="wishlistItems">
+    <div class="empty-wishlist">Belum ada produk di wishlist<br><span style="font-size:1.5rem">🛍️</span></div>
+  </div>
+  <button class="close-btn" onclick="toggleWishlist()">Tutup</button>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <h2 style="margin-bottom:10px;">LapakThriftUMSU</h2>
+    <p>Marketplace preloved mahasiswa dengan tampilan modern.</p>
+    <div class="footer-bottom">
+      <div>© 2025 LapakThriftUMSU</div>
+      <div class="social">
+        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#"><i class="fa-brands fa-whatsapp"></i></a>
+        <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ====== MOBILE MENU ====== */
+function openMobileMenu(){
+  document.getElementById('mobileMenu').classList.add('open');
+  document.getElementById('mobileOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeMobileMenu(){
+  document.getElementById('mobileMenu').classList.remove('open');
+  document.getElementById('mobileOverlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+/* ====== SLIDESHOW ====== */
+let currentSlide=0;
+function goSlide(n){
+  document.querySelectorAll('.slide-img').forEach((s,i)=>s.classList.toggle('active',i===n));
+  document.querySelectorAll('.sdot').forEach((d,i)=>d.classList.toggle('active',i===n));
+  currentSlide=n;
+}
+setInterval(()=>goSlide((currentSlide+1)%3),4000);
+
+/* ====== PRODUCTS ====== */
+const DEFAULT_PRODUCTS=[
+  {id:1,brand:'Buku Jaringan',detail:'Sangat baik',price:'Rp 85.000',img:'https://www.static-src.com/wcsstore/Indraprastha/images/catalog/full/catalog-image/100/MTA-175813714/no-brand_no-brand_full01.jpg',cat:'Buku',stok:1,seller:'Penjual Ananda'},
+  {id:2,brand:'Lemari',detail:'Sangat baik',price:'Rp 70.000',img:'https://images.tokopedia.net/img/cache/700/VqbcmM/2023/7/21/e9a236e1-eaeb-418e-975c-5e73ec9c4fef.jpg',cat:'Alat Kost',stok:0,seller:'Penjual Chaps'},
+  {id:3,brand:'Kipas Angin',detail:'Baik',price:'Rp 120.000',img:'https://down-id.img.susercontent.com/file/id-11134207-7rasl-m23i1mbotujx2e',cat:'Elektronik',stok:1,seller:'Penjual Mango'},
+  {id:4,brand:'Adidas',detail:'45 · Sangat baik',price:'Rp 250.000',img:'https://media.karousell.com/media/photos/products/2024/2/25/sepatu_adidas_original_sport_s_1708826014_9dd9f7fa_progressive.jpg',cat:'Fashion',stok:1,seller:'Penjual Adidas'},
+];
+
+let products=[];
+let wishlist=[];
+
+function loadProducts(){
+  const stored=JSON.parse(localStorage.getItem('lapak_products')||'null');
+  if(Array.isArray(stored)&&stored.length){
+    return stored.map(p=>({
+      id:p.id||Date.now(),
+      brand:p.name||p.brand||'Produk',
+      detail:`${p.size||''} · ${p.condition||'Baik'}`.trim(),
+      price:p.price?`Rp ${Number(p.price).toLocaleString('id-ID')}`:p.price||'Rp 0',
+      img:p.image||p.imageUrl||p.img||'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=600&auto=format&fit=crop',
+      cat:p.category||p.cat||'Lainnya',
+      stok:Number(p.stok??p.stock??0),
+      seller:p.seller||'Penjual',
+    }));
+  }
+  return DEFAULT_PRODUCTS;
+}
+
+products=loadProducts();
+
+function renderGrid(filter){
+  const grid=document.getElementById('productGrid');
+  const filtered=filter==='Semua'?products:products.filter(p=>p.cat===filter);
+  grid.innerHTML=filtered.map(p=>{
+    const soldOut=p.stok<=0;
+    return `
+      <div class="product-card ${soldOut?'sold':''}" onclick="viewProduct(this)"
+        data-id="${p.id}" data-category="${p.cat}" data-img="${p.img}"
+        data-brand="${p.brand}" data-detail="${p.detail}"
+        data-price="${p.price}" data-stok="${p.stok}" data-seller="${p.seller}">
+        <div class="product-image">
+          <img src="${p.img}" alt="${p.brand}" loading="lazy">
+          ${soldOut?'<div class="sold-badge">Habis</div>':''}
+          <button type="button" class="wishlist-heart" id="heart-${p.id}"
+            onclick="event.stopPropagation();toggleHeart(event,${p.id})" title="Wishlist">
+            <i class="${wishlist.find(w=>w.id===p.id)?'fa-solid':'fa-regular'} fa-heart"
+              style="${wishlist.find(w=>w.id===p.id)?'color:#ef4444':''}"></i>
+          </button>
+        </div>
+        <div class="product-content">
+          <div class="brand-name">${p.brand}</div>
+          <div class="product-detail">${p.detail} · ${p.cat}</div>
+          <div class="product-price">${p.price}</div>
+          <div style="margin-top:8px;font-size:.9rem;color:${soldOut?'#dc2626':'#0f172a'};font-weight:700;">
+            ${soldOut?'Stok habis':'Stok '+p.stok}
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+  document.getElementById('totalProductText').textContent=`${filtered.length} Produk Tersedia`;
+}
+
+function viewProduct(card){
+  const product={
+    img:card.dataset.img,brand:card.dataset.brand,
+    detail:card.dataset.detail,price:card.dataset.price,
+    stok:Number(card.dataset.stok),seller:card.dataset.seller,
+  };
+  sessionStorage.setItem('selectedProduct',JSON.stringify(product));
+  if(false){
+    window.location.href='detail.html';
+  } else {
+    sessionStorage.setItem('intended','detail.html');
+    window.location.href='login.html';
+  }
+}
+
+function toggleHeart(e,id){
+  e.stopPropagation();
+  const btn=document.getElementById('heart-'+id);
+  const product=products.find(p=>p.id===id);
+  const idx=wishlist.findIndex(w=>w.id===id);
+  if(idx===-1){
+    wishlist.push(product);
+    btn.classList.add('loved');
+    btn.innerHTML='<i class="fa-solid fa-heart" style="color:#ef4444"></i>';
+    spawnHeart(btn);
+  } else {
+    wishlist.splice(idx,1);
+    btn.classList.remove('loved');
+    btn.innerHTML='<i class="fa-regular fa-heart"></i>';
+  }
+  renderWishlistItems();
+}
+
+function spawnHeart(btn){
+  const rect=btn.getBoundingClientRect();
+  const anim=document.createElement('div');
+  anim.className='heart-anim';
+  anim.textContent='❤️';
+  anim.style.cssText=`position:fixed;left:${rect.left+rect.width/2}px;top:${rect.top+rect.height/2}px;z-index:9999;pointer-events:none;font-size:1.8rem;`;
+  document.body.appendChild(anim);
+  setTimeout(()=>anim.remove(),700);
+}
+
+function renderWishlistItems(){
+  const el=document.getElementById('wishlistItems');
+  if(!wishlist.length){
+    el.innerHTML='<div class="empty-wishlist">Belum ada produk di wishlist<br><span style="font-size:1.5rem">🛍️</span></div>';
+    return;
+  }
+  el.innerHTML=wishlist.map(w=>`
+    <div class="wishlist-item">
+      <img src="${w.img}" alt="${w.brand}">
+      <div class="wi-info">
+        <div class="wi-brand">${w.brand}</div>
+        <div class="wi-price">${w.price}</div>
+        <div style="font-size:.78rem;color:#64748b;">${w.detail}</div>
+      </div>
+      <button class="wi-remove" onclick="removeWishlist(${w.id})"><i class="fa-solid fa-trash-can"></i></button>
+    </div>`).join('');
+}
+
+function removeWishlist(id){
+  wishlist=wishlist.filter(w=>w.id!==id);
+  renderWishlistItems();
+  const btn=document.getElementById('heart-'+id);
+  if(btn){btn.classList.remove('loved');btn.innerHTML='<i class="fa-regular fa-heart"></i>';}
+}
+
+function toggleWishlist(){
+  document.getElementById('wishlistPanel').classList.toggle('open');
+}
+
+function filterChip(el,cat){
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  renderGrid(cat);
+}
+
+function expandSearch(){document.getElementById('searchBar').classList.add('expanded');}
+function collapseSearch(){
+  setTimeout(()=>{
+    document.getElementById('searchBar').classList.remove('expanded');
+    document.getElementById('searchResults').classList.remove('show');
+  },200);
+}
+function handleSearch(){
+  const q=document.getElementById('searchInput').value.trim().toLowerCase();
+  const res=document.getElementById('searchResults');
+  if(!q){res.classList.remove('show');return;}
+  const matches=products.filter(p=>p.brand.toLowerCase().includes(q)||p.cat.toLowerCase().includes(q));
+  res.innerHTML=matches.length
+    ?matches.map(p=>`
+      <div class="search-result-item" onclick="document.getElementById('searchResults').classList.remove('show')">
+        <img class="thumb" src="${p.img}" alt="${p.brand}">
+        <div class="info">
+          <div class="name">${p.brand}</div>
+          <div style="font-size:.78rem;color:#64748b;">${p.detail} · ${p.cat}</div>
+          <div class="price">${p.price}</div>
+        </div>
+      </div>`).join('')
+    :'<div class="search-empty">Produk tidak ditemukan 🙁</div>';
+  res.classList.add('show');
+}
+function doSearch(){handleSearch();}
+
+function showHowItWorks(){
+  alert(`Cara Berjualan di LapakThriftUMSU\n\n1. Login ke akun\n2. Klik Upload Produk\n3. Isi nama, harga, dan foto produk\n4. Publikasikan produk\n5. Pembeli dapat menghubungi Anda melalui chat\n\nSelamat berjualan! 🚀`);
+}
+
+function goSell(){
+  if(false){
+    window.location.href='upload.html';
+  } else {
+    sessionStorage.setItem('intended','upload.html');
+    window.location.href='login.html';
+  }
+}
+
+function goLogin(){
+  if(false){
+    window.location.href='userafterlogin.html';
+    return;
+  }
+  sessionStorage.setItem('intended','index.html');
+  window.location.href='login.html';
+}
+
+/* ====== INIT ====== */
+window.addEventListener('DOMContentLoaded',function(){
+  const params=new URLSearchParams(window.location.search);
+  const category=params.get('category');
+  if(category){
+    const decoded=decodeURIComponent(category);
+    const chipEl=Array.from(document.querySelectorAll('.chip')).find(c=>c.innerText===decoded);
+    if(chipEl) filterChip(chipEl,decoded);
+    else renderGrid('Semua');
+  } else {
+    renderGrid('Semua');
+  }
+  document.getElementById('productCount').textContent=products.length;
+});
+
+/* Clock */
+function updateClock(){
+  const now=new Date();
+  const h=String(now.getHours()).padStart(2,'0');
+  const m=String(now.getMinutes()).padStart(2,'0');
+  const s=String(now.getSeconds()).padStart(2,'0');
+  document.getElementById('clockDisplay').textContent=`${h}:${m}:${s} WIB`;
+}
+setInterval(updateClock,1000);
+updateClock();
+</script>
+</body>
+</html>
